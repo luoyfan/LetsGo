@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
@@ -42,7 +43,8 @@ public class MainActivity extends Activity {
     Button tab2_button1;
     Button tab2_button2;
     Button tab2_button3;
-    Button tab2_button4;    
+    Button tab2_button4;   
+    EditText tab2_editText1;
     
     Chronometer tab3_chronometer1;
     TextView tab3_textView1;
@@ -57,6 +59,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         context = this;
         am = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        
+        RecordListManager.getInstance(context).updateAllState();
 
         tabHost=(TabHost)findViewById(R.id.tabHost);
         tab1_listView1 = (ListView)findViewById(R.id.tab1_listView1);
@@ -67,6 +71,7 @@ public class MainActivity extends Activity {
         tab2_button2 = (Button)findViewById(R.id.tab2_button2);
         tab2_button3 = (Button)findViewById(R.id.tab2_button3);
         tab2_button4 = (Button)findViewById(R.id.tab2_button4);
+        tab2_editText1 = (EditText)findViewById(R.id.tab2_editText1);
         tab3_chronometer1 = (Chronometer)findViewById(R.id.tab3_chronometer1);
         tab3_textView1 = (TextView)findViewById(R.id.tab3_textView1);
         tab3_button1 = (Button)findViewById(R.id.tab3_button1);
@@ -206,6 +211,7 @@ public class MainActivity extends Activity {
     
 	private void refresh_tab1_listView1() {
 	    String[] str = RecordListManager.getInstance(context).getStringArray();
+	    RecordListManager.getInstance(context).updateAllState();
 	    if (str == null)
 	    	str = new String[]{};
 	    ArrayAdapter<String> lab1_listView1_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, str);
