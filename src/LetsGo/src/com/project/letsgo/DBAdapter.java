@@ -104,11 +104,9 @@ public class DBAdapter extends SQLiteOpenHelper{
 		{
 			return records;
 		}
-		ArrayList<Record> records = new ArrayList<Record>();
-		//for (int i = 0; i < resultCounts; i++)
-		for (int i = resultCounts - 1; i >= 0; i--)
+		for (int i = 0; i < resultCounts; i++)
 		{
-			records.add( valuesToRecord(new Record(), cursor) );
+			records.add( 0, valuesToRecord(new Record(), cursor) );
 			cursor.moveToNext();
 		}
 		return records;

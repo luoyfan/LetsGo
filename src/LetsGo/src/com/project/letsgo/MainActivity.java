@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -54,6 +55,13 @@ public class MainActivity extends Activity {
     
     AlarmManager am;
 
+    @Override
+    protected void onResume() {
+        refresh_tab1_listView1();
+        System.out.println("RRRResume!!");
+        super.onResume();
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -61,6 +69,8 @@ public class MainActivity extends Activity {
         am = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
         
         RecordListManager.getInstance(context).updateAllState();
+
+        System.out.println("p-0");
 
         tabHost=(TabHost)findViewById(R.id.tabHost);
         tab1_listView1 = (ListView)findViewById(R.id.tab1_listView1);
@@ -75,6 +85,9 @@ public class MainActivity extends Activity {
         tab3_chronometer1 = (Chronometer)findViewById(R.id.tab3_chronometer1);
         tab3_textView1 = (TextView)findViewById(R.id.tab3_textView1);
         tab3_button1 = (Button)findViewById(R.id.tab3_button1);
+        
+
+        System.out.println("p0");
         
         // Setting up Tabs UI.	
         tabHost.setup();
@@ -94,11 +107,16 @@ public class MainActivity extends Activity {
         spec3.setIndicator("开始记录");
         tabHost.addTab(spec3);
         // End of Tabs UI setting up.
+
+        System.out.println("p1");
         
         
         // list View 1 process
-        //String[] str = new String[] { "Android Introduction","Android Setup/Installation","Android Hello World","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Intents in Android","Android Layouts/Viewgroups","Android Activity & Lifecycle","Intents in Android"};
         refresh_tab1_listView1();
+        
+
+        System.out.println("p2");
+        
         tab1_listView1.setOnItemLongClickListener(new OnItemLongClickListener(){
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 RecordListManager.getInstance(context).removeRecord(arg2);
@@ -110,6 +128,57 @@ public class MainActivity extends Activity {
                         ).show();
                 return false;
             }
+        });
+        
+        tab1_listView1.setOnItemClickListener(new OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Record rec = RecordListManager.getInstance(context).getRecord(position);
+                
+                String myFormat = "yyyy/MM/dd";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.CHINA);
+                String currentDate = sdf.format(Calendar.getInstance().getTime());
+                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                int minute = Calendar.getInstance().get(Calendar.MINUTE);
+                String currentTime = "" + hour + ":" + minute;
+                
+                if (Record.getTimeMapping(rec.getDate(), rec.getStartTime()) > Record.getTimeMapping(currentDate, currentTime)){
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "未到达该计划开始时间", 
+                            Toast.LENGTH_LONG
+                            ).show();
+                }
+                else if (rec.getState() == Record.FAIL){
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "该计划已经结束", 
+                            Toast.LENGTH_LONG
+                            ).show();
+                }
+                else{
+                    String str = "开始第" + position + "个记录";
+                    Toast.makeText(
+                            getApplicationContext(),
+                            str, 
+                            Toast.LENGTH_LONG
+                            ).show();
+                    
+                    System.out.println("hi--1");
+                    
+                    Intent it = new Intent(MainActivity.this, StartRecord.class);
+                    Bundle bd = new Bundle();
+                    bd.putInt("position", position);
+                    it.putExtras(bd);
+                    startActivity(it);
+                    
+                    System.out.println("hi--2");
+                    
+                }
+                
+            }
+            
         });
         // ListView 1 finish.
         
@@ -193,9 +262,8 @@ public class MainActivity extends Activity {
         });
         // tab2 finish
 
-        
-	}
-    
+    }
+
     @SuppressLint("SimpleDateFormat")
 	private long getTime(String user_time)
     {
@@ -208,10 +276,11 @@ public class MainActivity extends Activity {
 		}
     	return -1;
     }
-    
-	private void refresh_tab1_listView1() {
+  
+    private void refresh_tab1_listView1() {
+        
+        RecordListManager.getInstance(context).updateAllState();
 	    String[] str = RecordListManager.getInstance(context).getStringArray();
-	    RecordListManager.getInstance(context).updateAllState();
 	    if (str == null)
 	    	str = new String[]{};
 	    ArrayAdapter<String> lab1_listView1_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, str);
