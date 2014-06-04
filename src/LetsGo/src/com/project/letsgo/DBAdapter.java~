@@ -32,8 +32,7 @@ public class DBAdapter extends SQLiteOpenHelper{
 									+ " "+KEY_STATE+" integer,"
 									+ " "+KEY_DATE+" TEXT,"
 									+ " "+KEY_START_TIME+" TEXT,"
-									+ " "+KEY_END_TIME+" TEXT,"
-									+ " "+KEY_DISTANCE+" integer);";
+									+ " "+KEY_END_TIME+" TEXT);";
 		db.execSQL(SQL_CREATE_TABLE);
 	}
 
@@ -101,7 +100,7 @@ public class DBAdapter extends SQLiteOpenHelper{
 		{
 			return records;
 		}
-		for (int i = resultCounts - 1; i >= 0; i--)
+		for (int i = 0; i < resultCounts; i++)
 		{
 			records.add( valuesToRecord(new Record(), cursor) );
 			cursor.moveToNext();

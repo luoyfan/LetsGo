@@ -121,6 +121,7 @@ public class MainActivity extends Activity {
                 String myFormat = "yyyy/MM/dd";
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.CHINA);
                 tab2_textView1.setText(sdf.format(myCalendar.getTime()));
+                System.out.print(myCalendar.getTime());
                 }
         };
         
@@ -168,8 +169,7 @@ public class MainActivity extends Activity {
                 RecordListManager.getInstance(context).addRecord(
 			            tab2_textView1.getText().toString(),
 				        tab2_textView2.getText().toString(),
-					    tab2_textView3.getText().toString(),
-					    Integer.parseInt(tab2_editText1.getText().toString()));
+					    tab2_textView3.getText().toString());
 			    refresh_tab1_listView1();
 			    Toast.makeText(
                         getApplicationContext(),

@@ -34,6 +34,8 @@ public class RecordListManager {
 		return strList;
 	}
 	
+	public void addRecord(String date, String stime, String etime) {
+		Record newRecord = new Record(date, stime, etime);
 		long thisId = myHelper.insert(newRecord);
 		newRecord.setID(thisId);
 		if (thisId != -1)

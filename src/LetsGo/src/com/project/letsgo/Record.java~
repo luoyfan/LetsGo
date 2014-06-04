@@ -20,7 +20,7 @@ public class Record {
 		end_time = "";
 	}
 	
-	public Record(String d, String s, String e, int dist)
+	public Record(String d, String s, String e)
 	{
 		id = -1;
 		state = Record.NOT_COMPLETE;
